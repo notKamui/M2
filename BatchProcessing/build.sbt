@@ -6,3 +6,5 @@ lazy val root = (project in file("."))
   .settings(
     name := "BatchProcessing"
   )
+
+libraryDependencies += "org.apache.spark" % "spark-core_2.12" % "3.3.0"
