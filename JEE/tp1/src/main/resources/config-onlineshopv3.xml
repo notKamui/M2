@@ -5,20 +5,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="fr.uge.jee.onlineshop.OnlineShop">
+
+    <bean class="fr.uge.jee.onlineshop.StandardDelivery">
+        <property name="delay" value="999"/>
+    </bean>
+    <bean class="fr.uge.jee.onlineshop.ReturnInsurance"/>
+    <bean class="fr.uge.jee.onlineshop.TheftInsurance"/>
+
+    <bean class="fr.uge.jee.onlineshop.OnlineShop" autowire="byType">
         <property name="name" value="AhMaZone"/>
-        <property name="deliveryOptions">
-            <set>
-                <bean class="fr.uge.jee.onlineshop.StandardDelivery">
-                    <property name="delay" value="999"/>
-                </bean>
-            </set>
-        </property>
-        <property name="insurances">
-            <set>
-                <bean class="fr.uge.jee.onlineshop.ReturnInsurance"/>
-                <bean class="fr.uge.jee.onlineshop.TheftInsurance"/>
-            </set>
-        </property>
     </bean>
 </beans>
