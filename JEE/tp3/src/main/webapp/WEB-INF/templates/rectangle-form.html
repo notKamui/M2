@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <form action="/App/rectangle" method="post">
+        <h2>Rectangle area calculator</h2>
+        <div><label for="h">Height:</label>
+            <input id="h" type="text" name="height" value="{height}"></div>
+
+        <div><label for="w">Width:</label>
+            <input type="text" id="w" name="width" value="{width}"></div>
+
+        <div><button type="submit">Compute</button></div>
+
+        {invalidParams}
+    </form>
+</html>
