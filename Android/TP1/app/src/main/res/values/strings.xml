@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">TP1</string>
+    <string name="app_name" translatable="false">TP1</string>
+    <string name="hello_world">Hello World</string>
+    <string name="quit">Quit</string>
+    <string name="word_map">word map</string>
+    <string name="quit_for_real">Quit for real</string>
 </resources>

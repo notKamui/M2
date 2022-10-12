@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello_world">Bonjour le monde</string>
+    <string name="quit">Quitter</string>
+    <string name="word_map">carte du monde</string>
+    <string name="quit_for_real">Quit for real</string>
+</resources>
