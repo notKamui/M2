@@ -8,17 +8,16 @@ import java.util.UUID;
 
 public class SessionManager {
 
-    private final Object lock = new Object();
     private final Map<UUID, Integer> sessions = new HashMap<>();
 
     public int incrementCounter(UUID sessionId) {
-        synchronized (lock) {
+        synchronized (sessions) {
             return sessions.merge(sessionId, 1, Integer::sum);
         }
     }
 
-    public UUID getSessionId(HttpServletRequest req) {
-        synchronized (lock) {
+    public UUID getSessionTokenFromOrNull(HttpServletRequest req) {
+        synchronized (sessions) {
             var cookie = req.getCookies();
             if (cookie == null) {
                 return null;
