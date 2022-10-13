@@ -28,4 +28,8 @@ public class RectangleForm {
     public void setHeight(int height) {
         this.height = height;
     }
+
+    public int getArea() {
+        return width * height;
+    }
 }

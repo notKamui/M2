@@ -25,7 +25,7 @@ public class RectangleController {
             model.addAttribute("invalid", true);
             return "rectangle-form";
         }
-        model.addAttribute("area", form.getWidth() * form.getHeight());
+        model.addAttribute("area", form.getArea());
         return "rectangle-result";
     }
 }
