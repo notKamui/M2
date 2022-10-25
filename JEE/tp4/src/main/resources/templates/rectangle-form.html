@@ -10,11 +10,13 @@
     <div>
         <label for="h">Height:</label>
         <input id="h" type="text" name="height" th:field="*{height}">
+        <span  th:if="${#fields.hasErrors('height')}" th:errors="*{height}">Invalid height</span>
     </div>
 
     <div>
         <label for="w">Width:</label>
         <input type="text" id="w" name="width" th:field="*{width}">
+        <span  th:if="${#fields.hasErrors('width')}" th:errors="*{width}">Invalid height</span>
     </div>
 
     <div>
