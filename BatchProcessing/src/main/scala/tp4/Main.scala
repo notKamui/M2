@@ -11,7 +11,7 @@ object Main {
     Logger.getLogger("akka").setLevel(Level.OFF)
     Logger.getLogger("spark").setLevel(Level.OFF)
     LogManager.getRootLogger.setLevel(Level.OFF)
-    val conf = new SparkConf().setAppName("TP2").setMaster("local[2]").set("spark.executor.memory", "1g")
+    val conf = new SparkConf().setAppName("TP4").setMaster("local[2]").set("spark.executor.memory", "1g")
     val sc = new SparkContext(conf)
 
     val univ = sc.textFile("data/tp4/univ1.nt")
