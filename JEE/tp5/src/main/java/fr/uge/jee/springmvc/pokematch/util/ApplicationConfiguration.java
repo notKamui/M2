@@ -1,6 +1,6 @@
 package fr.uge.jee.springmvc.pokematch.util;
 
-import fr.uge.jee.springmvc.pokematch.rest.PokemonRepository;
+import fr.uge.jee.springmvc.pokematch.web.pokemon.PokemonRepository;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
