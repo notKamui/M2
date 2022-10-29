@@ -27,10 +27,15 @@
 
 <div th:if="${match != null}">
     <h2>Your match is :</h2>
-    <p>
-        #<span th:text="${match.id}"></span> : <span th:text="${match.name}"></span>
-    </p>
-    <img th:src="${match.spriteUrl}" th:alt="${match.name}">
+    <p th:text="${'#' + match.idString + ' : ' + match.name}"></p>
+    <img th:if="${match.spriteUrl != null}" th:src="${match.spriteUrl}" th:alt="${match.name + ' sprite'}">
+</div>
+
+<div>
+    <h2>Leaderboard</h2>
+    <ol>
+        <li th:each="pmkn : ${leaderboard}" th:text="${'#' + pmkn.idString + ' : ' + pmkn.name}"></li>
+    </ol>
 </div>
 </body>
 </html>

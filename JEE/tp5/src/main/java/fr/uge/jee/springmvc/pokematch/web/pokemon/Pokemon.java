@@ -20,6 +20,9 @@ public class Pokemon {
     @JsonIgnore
     private Integer hashName = null;
 
+    @JsonIgnore
+    private String idString = null;
+
     public Pokemon() {
     }
 
@@ -58,5 +61,12 @@ public class Pokemon {
             hashName = name.hashCode();
         }
         return hashName;
+    }
+
+    public String idString() {
+        if (idString == null) {
+            idString = String.format("%04d", id);
+        }
+        return idString;
     }
 }

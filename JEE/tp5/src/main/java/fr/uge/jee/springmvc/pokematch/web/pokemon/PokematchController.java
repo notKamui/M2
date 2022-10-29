@@ -1,5 +1,7 @@
 package fr.uge.jee.springmvc.pokematch.web.pokemon;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ public class PokematchController {
         }
         var match = service.findMatch(identityForm.getFirstname(), identityForm.getLastname());
         model.addAttribute("match", match);
+        model.addAttribute("leaderboard", new ArrayList<>(service.all()));
         return "pokemon/index";
     }
 }
