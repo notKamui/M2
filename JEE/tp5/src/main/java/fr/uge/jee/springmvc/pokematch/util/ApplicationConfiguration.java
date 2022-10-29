@@ -1,6 +1,6 @@
 package fr.uge.jee.springmvc.pokematch.util;
 
-import fr.uge.jee.springmvc.pokematch.web.pokemon.PokemonRepository;
+import fr.uge.jee.springmvc.pokematch.web.pokemon.PokemonStorage;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
@@ -18,7 +18,7 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public PokemonRepository pokemonRepository(WebClient webClient) {
-        return PokemonRepository.create(webClient);
+    public PokemonStorage pokemonRepository(WebClient webClient) {
+        return PokemonStorage.create(webClient);
     }
 }

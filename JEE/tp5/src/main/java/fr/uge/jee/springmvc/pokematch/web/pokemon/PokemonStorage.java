@@ -1,21 +1,21 @@
 package fr.uge.jee.springmvc.pokematch.web.pokemon;
 
-import org.springframework.web.reactive.function.client.WebClient;
-
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedMap;
+import org.springframework.web.reactive.function.client.WebClient;
 
-public class PokemonRepository {
+public class PokemonStorage {
 
     private final static String POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
     private final Set<Pokemon> pokemons;
 
-    public PokemonRepository(Set<Pokemon> pokemons) {
+    public PokemonStorage(Set<Pokemon> pokemons) {
         this.pokemons = pokemons;
     }
 
-    public static PokemonRepository create(WebClient client) {
+    public static PokemonStorage create(WebClient client) {
         var pokemons = new HashSet<Pokemon>();
         client.get()
             .uri(POKEMON_API_URL + "?limit=40")
@@ -27,12 +27,11 @@ public class PokemonRepository {
                     .retrieve()
                     .bodyToMono(PokemonResponse.class)
                     .map(PokemonResponse::toPokemon)
-                    .subscribe(pokemons::add)
-                ));
-        return new PokemonRepository(pokemons);
+                    .subscribe(pokemons::add)));
+        return new PokemonStorage(pokemons);
     }
 
     public Set<Pokemon> all() {
-        return Set.copyOf(pokemons);
+        return pokemons;
     }
 }

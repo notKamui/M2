@@ -1,5 +1,6 @@
 package fr.uge.jee.springmvc.pokematch.web.pokemon;
 
+import java.util.Collection;
 import java.util.Set;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ public class PokemonRestController {
     }
 
     @GetMapping
-    public Set<Pokemon> all() {
+    public Collection<Pokemon> all() {
         return service.all();
     }
 

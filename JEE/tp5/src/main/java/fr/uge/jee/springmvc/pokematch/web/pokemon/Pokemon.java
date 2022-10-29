@@ -1,7 +1,9 @@
 package fr.uge.jee.springmvc.pokematch.web.pokemon;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.StringJoiner;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pokemon {
@@ -14,6 +16,9 @@ public class Pokemon {
 
     @JsonProperty("sprite_url")
     private String spriteUrl;
+
+    @JsonIgnore
+    private Integer hashName = null;
 
     public Pokemon() {
     }
@@ -46,5 +51,12 @@ public class Pokemon {
 
     public void setSpriteUrl(String spriteUrl) {
         this.spriteUrl = spriteUrl;
+    }
+
+    public int hashName() {
+        if (hashName == null) {
+            hashName = name.hashCode();
+        }
+        return hashName;
     }
 }

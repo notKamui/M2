@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PokéMatch</title>
+</head>
+<body>
+<h1>PokéMatch</h1>
+<form th:action="@{/pokemon}" th:object="${identityForm}" method="post">
+    <h2>Enter your firstname and lastname</h2>
+    <div>
+        <label for="firstname">Firstname*</label>
+        <input type="text" id="firstname" name="firstname" th:field="*{firstname}" />
+        <span  th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></span>
+    </div>
+    <div>
+        <label for="lastname">Lastname*</label>
+        <input type="text" id="lastname" name="lastname" th:field="*{lastname}" />
+        <span  th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></span>
+    </div>
+
+    <button type="submit">Calculate</button>
+</form>
+
+<div th:if="${match != null}">
+    <h2>Your match is :</h2>
+    <p>
+        #<span th:text="${match.id}"></span> : <span th:text="${match.name}"></span>
+    </p>
+    <img th:src="${match.spriteUrl}" th:alt="${match.name}">
+</div>
+</body>
+</html>
