@@ -32,12 +32,39 @@ public class PokemonService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No pokemon with id " + id));
     }
 
+//    public Pokemon findMatch(String firstname, String lastname) {
+//        var hash = (firstname + lastname).hashCode();
+//        return storage.all()
+//            .stream()
+//            .min(Comparator.comparingInt(pokemon -> Math.abs(pokemon.hashName() - hash)))
+//            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No pokemon match for " + firstname + " " + lastname));
+//    }
+
     public Pokemon findMatch(String firstname, String lastname) {
+        var pokemons = storage.all();
+        if (pokemons.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No pokemon match for " + firstname + " " + lastname);
+        }
+
         var hash = (lastname + firstname).hashCode();
-        return storage.all()
-            .stream()
-            .min(Comparator.comparingInt(pokemon -> Math.abs(pokemon.hashName() - hash)))
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No pokemon found"));
+
+        var min = 0;
+        var max = pokemons.size() - 1;
+        int mid = 0;
+        while (min < max) {
+            mid = (min + max) / 2;
+            var pokemon = pokemons.get(mid);
+            if (pokemon.hashName() < hash) {
+                min = mid + 1;
+            } else {
+                max = mid;
+            }
+        }
+
+        var minP = pokemons.get(min);
+        var midP = pokemons.get(mid);
+
+        return Math.abs(minP.hashName() - hash) < Math.abs(midP.hashName() - hash) ? minP : midP;
     }
 
     public Collection<Pokemon> all() {

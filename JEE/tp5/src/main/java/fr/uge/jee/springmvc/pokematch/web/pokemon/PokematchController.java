@@ -16,24 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PokematchController {
 
     private final PokemonService service;
+    private final PokemonLeaderboard leaderboard;
 
-    public PokematchController(PokemonService service) {
+    public PokematchController(PokemonService service, PokemonLeaderboard leaderboard) {
         this.service = service;
+        this.leaderboard = leaderboard;
     }
 
     @GetMapping
-    public String form(@ModelAttribute("identityForm") IdentityForm identityForm) {
+    public String form(@ModelAttribute("identityForm") IdentityForm identityForm, Model model) {
+        model.addAttribute("leaderboard", leaderboard);
         return "pokemon/index";
     }
 
     @PostMapping
     public String result(@Valid @ModelAttribute("identityForm") IdentityForm identityForm, BindingResult binding, Model model) {
         if (binding.hasErrors()) {
+            model.addAttribute("leaderboard", leaderboard);
             return "pokemon/index";
         }
+
         var match = service.findMatch(identityForm.getFirstname(), identityForm.getLastname());
+        leaderboard.scorePokemon(match);
         model.addAttribute("match", match);
-        model.addAttribute("leaderboard", new ArrayList<>(service.all()));
+        model.addAttribute("leaderboard", leaderboard);
         return "pokemon/index";
     }
 }

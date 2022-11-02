@@ -34,7 +34,7 @@
 <div>
     <h2>Leaderboard</h2>
     <ol>
-        <li th:each="pmkn : ${leaderboard}" th:text="${'#' + pmkn.idString + ' : ' + pmkn.name}"></li>
+        <li th:each="pmkn : ${leaderboard.leaders}" th:text="${'#' + pmkn.first.idString + ' : ' + pmkn.first.name + ' (score : ' + pmkn.second + ')'}"></li>
     </ol>
 </div>
 </body>

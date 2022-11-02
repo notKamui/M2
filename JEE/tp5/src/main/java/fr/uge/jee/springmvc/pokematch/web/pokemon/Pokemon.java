@@ -3,6 +3,7 @@ package fr.uge.jee.springmvc.pokematch.web.pokemon;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -68,5 +69,21 @@ public class Pokemon {
             idString = String.format("%04d", id);
         }
         return idString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Pokemon pokemon = (Pokemon) o;
+
+        if (id != pokemon.id) return false;
+        return name.equals(pokemon.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }
