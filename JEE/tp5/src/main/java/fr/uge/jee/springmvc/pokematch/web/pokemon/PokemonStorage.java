@@ -1,8 +1,11 @@
 package fr.uge.jee.springmvc.pokematch.web.pokemon;
 
+import graphql.kickstart.spring.webclient.boot.GraphQLRequest;
+import graphql.kickstart.spring.webclient.boot.GraphQLWebClient;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -10,12 +13,19 @@ import reactor.core.publisher.Mono;
 public class PokemonStorage {
 
     private final static String POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
+    private final static String POKEMON_GQL_QUERY = "query pokemonQuery {\n" +
+        "  results: pokemon_v2_pokemonsprites(limit: 1) {\n" +
+        "    data: pokemon_v2_pokemon {\n" +
+        "      id\n" +
+        "      name\n" +
+        "    }\n" +
+        "    sprites\n" +
+        "  }\n" +
+        "}\n";
 
-    private final WebClient client;
     private final List<Pokemon> pokemons;
 
-    public PokemonStorage(WebClient client, List<Pokemon> pokemons) {
-        this.client = client;
+    public PokemonStorage(List<Pokemon> pokemons) {
         this.pokemons = pokemons;
     }
 
@@ -44,16 +54,29 @@ public class PokemonStorage {
             .collectList()
             .block();
 
-        return new PokemonStorage(client, pokemons);
+        return new PokemonStorage(pokemons);
     }
 
-    public byte[] getImage(String url) {
-        return client.get()
-            .uri(url)
-            .retrieve()
-            .bodyToMono(byte[].class)
-            .block();
+    public static PokemonStorage create(GraphQLWebClient graphQLWebClient) {
+        var query = GraphQLRequest.builder().query(POKEMON_GQL_QUERY).build();
+        var response = graphQLWebClient.post(query).block();
+        if (response == null) {
+            throw new IllegalArgumentException("Could not build query");
+        }
+        var results = response.getList("results", PokemonGQLResponse.class);
+        if (results == null) {
+            throw new IllegalStateException("Could not retrieve pokemon list");
+        }
+
+        var pokemons = results.stream()
+            .map(PokemonGQLResponse::toPokemon)
+            .sorted(Comparator.comparingInt(Pokemon::hashName))
+            .collect(Collectors.toList());
+
+        return new PokemonStorage(pokemons);
     }
+
+
 
     /**
      * All the Pokémon sorted by their hash name.

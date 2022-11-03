@@ -5,15 +5,18 @@ import java.util.Comparator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class PokemonService {
 
     private final PokemonStorage storage;
+    private final WebClient client;
 
-    public PokemonService(PokemonStorage storage) {
+    public PokemonService(PokemonStorage storage, WebClient client) {
         this.storage = storage;
+        this.client = client;
     }
 
     public Pokemon findByName(String name) {
@@ -83,9 +86,17 @@ public class PokemonService {
         var pokemon = findById(id);
         var sprite = pokemon.getSprite();
         if (sprite == null) {
-            sprite = storage.getImage(pokemon.getSpriteUrl());
+            sprite = getImage(pokemon.getSpriteUrl());
             pokemon.setSprite(sprite);
         }
         return sprite;
+    }
+
+    private byte[] getImage(String url) {
+        return client.get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(byte[].class)
+            .block();
     }
 }
