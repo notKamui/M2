@@ -46,28 +46,46 @@ public class PokemonService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No pokemon match for " + firstname + " " + lastname);
         }
 
-        var hash = (lastname + firstname).hashCode();
+        var hash = (firstname + lastname).hashCode();
 
+        // Find the Pokémon with the smallest hash difference by dichotomy
         var min = 0;
         var max = pokemons.size() - 1;
-        int mid = 0;
+        var middle = (min + max) / 2;
+        var pokemon = pokemons.get(middle);
         while (min < max) {
-            mid = (min + max) / 2;
-            var pokemon = pokemons.get(mid);
             if (pokemon.hashName() < hash) {
-                min = mid + 1;
+                min = middle + 1;
             } else {
-                max = mid;
+                max = middle;
+            }
+            middle = (min + max) / 2;
+            pokemon = pokemons.get(middle);
+        }
+
+        // check if the next Pokémon is closer
+        var next = middle + 1;
+        if (next < pokemons.size()) {
+            var nextPokemon = pokemons.get(next);
+            if (Math.abs(nextPokemon.hashName() - hash) <= Math.abs(pokemon.hashName() - hash)) {
+                pokemon = nextPokemon;
             }
         }
 
-        var minP = pokemons.get(min);
-        var midP = pokemons.get(mid);
-
-        return Math.abs(minP.hashName() - hash) < Math.abs(midP.hashName() - hash) ? minP : midP;
+        return pokemon;
     }
 
     public Collection<Pokemon> all() {
         return storage.all();
+    }
+
+    public byte[] getSprite(long id) {
+        var pokemon = findById(id);
+        var sprite = pokemon.getSprite();
+        if (sprite == null) {
+            sprite = storage.getImage(pokemon.getSpriteUrl());
+            pokemon.setSprite(sprite);
+        }
+        return sprite;
     }
 }

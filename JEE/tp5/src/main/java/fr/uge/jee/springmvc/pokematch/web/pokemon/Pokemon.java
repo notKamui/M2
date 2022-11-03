@@ -3,8 +3,16 @@ package fr.uge.jee.springmvc.pokematch.web.pokemon;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Objects;
 import java.util.StringJoiner;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pokemon {
@@ -23,6 +31,9 @@ public class Pokemon {
 
     @JsonIgnore
     private String idString = null;
+
+    @JsonIgnore
+    private byte[] sprite = null;
 
     public Pokemon() {
     }
@@ -55,6 +66,14 @@ public class Pokemon {
 
     public void setSpriteUrl(String spriteUrl) {
         this.spriteUrl = spriteUrl;
+    }
+
+    public byte[] getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(byte[] sprite) {
+        this.sprite = sprite;
     }
 
     public int hashName() {

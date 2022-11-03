@@ -28,7 +28,7 @@
 <div th:if="${match != null}">
     <h2>Your match is :</h2>
     <p th:text="${'#' + match.idString + ' : ' + match.name}"></p>
-    <img th:if="${match.spriteUrl != null}" th:src="${match.spriteUrl}" th:alt="${match.name + ' sprite'}">
+    <img th:if="${match.spriteUrl != null}" th:src="@{/pokemon/api/sprite/{id}(id=${match.id})}" th:alt="${match.name + ' sprite'}">
 </div>
 
 <div>

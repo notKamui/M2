@@ -11,9 +11,11 @@ public class PokemonStorage {
 
     private final static String POKEMON_API_URL = "https://pokeapi.co/api/v2/pokemon";
 
+    private final WebClient client;
     private final List<Pokemon> pokemons;
 
-    public PokemonStorage(List<Pokemon> pokemons) {
+    public PokemonStorage(WebClient client, List<Pokemon> pokemons) {
+        this.client = client;
         this.pokemons = pokemons;
     }
 
@@ -42,7 +44,15 @@ public class PokemonStorage {
             .collectList()
             .block();
 
-        return new PokemonStorage(pokemons);
+        return new PokemonStorage(client, pokemons);
+    }
+
+    public byte[] getImage(String url) {
+        return client.get()
+            .uri(url)
+            .retrieve()
+            .bodyToMono(byte[].class)
+            .block();
     }
 
     /**
