@@ -1,7 +1,6 @@
-package fr.uge.jee.springmvc.pokematch.web.pokemon;
+package fr.uge.jee.springmvc.pokematch.web.pokemon.model;
 
 import fr.uge.jee.springmvc.pokematch.util.Pair;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public class PokemonLeaderboard {
         }
     }
 
-    // O(n) (et des chouillas mais faut pas le dire)
+    // O(2n) === O(n) (et des chouillas mais faut pas le dire)
     public List<Pair<Pokemon, Integer>> getLeaders() {
         synchronized (scoreToPokemons) {
             var leaders = scoreToPokemons.values().stream()

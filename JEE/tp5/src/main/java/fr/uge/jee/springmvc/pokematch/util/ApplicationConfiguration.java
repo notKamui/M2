@@ -1,15 +1,12 @@
 package fr.uge.jee.springmvc.pokematch.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import fr.uge.jee.springmvc.pokematch.web.pokemon.PokemonLeaderboard;
-import fr.uge.jee.springmvc.pokematch.web.pokemon.PokemonStorage;
+import fr.uge.jee.springmvc.pokematch.web.pokemon.model.PokemonLeaderboard;
+import fr.uge.jee.springmvc.pokematch.web.pokemon.inverseapi.PokemonStorage;
 import graphql.kickstart.spring.webclient.boot.GraphQLWebClient;
-import graphql.kickstart.spring.webclient.boot.GraphQLWebClientAutoConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -32,7 +29,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public GraphQLWebClient graphQLWebClient(WebClient.Builder defaultBuilder, ObjectMapper objectMapper) {
-        var client = defaultBuilder.baseUrl(graphqlClientUrl)
+        var client = defaultBuilder.baseUrl(graphqlClientUrl) // different from the default because of the base URL
             .exchangeStrategies(ExchangeStrategies.builder()
             .codecs(configurer -> configurer
                 .defaultCodecs()
@@ -41,8 +38,8 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public PokemonStorage pokemonRepository(GraphQLWebClient graphQLWebClient) {
-        return PokemonStorage.create(graphQLWebClient);
+    public PokemonStorage pokemonRepository(GraphQLWebClient graphQLWebClient, ObjectMapper objectMapper) {
+        return PokemonStorage.create(graphQLWebClient, objectMapper);
     }
 
     @Bean

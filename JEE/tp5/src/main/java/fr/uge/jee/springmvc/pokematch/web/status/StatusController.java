@@ -12,4 +12,9 @@ public class StatusController {
     public String notFound() {
         return "error/404";
     }
+
+    @GetMapping("/500")
+    public String internalServerError() {
+        return "error/500";
+    }
 }
