@@ -82,7 +82,8 @@ fun GameManager() {
             Slider(
                 value = expectedTime.toFloat(),
                 valueRange = 0f..60f,
-                onValueChange = { expectedTime = it.toLong() })
+                onValueChange = { expectedTime = it.toLong() }
+            )
             Button(onClick = { gameState = GameState.RUNNING }) {
                 Text(text = "Begin")
             }
@@ -106,7 +107,7 @@ fun GameManager() {
                     size = 16.sp
                 )
                 Button(onClick = { gameState = STARTING }) {
-                    Text(text = "Restart")
+                    Text(text = "Change Expected Time")
                 }
             }
         }
