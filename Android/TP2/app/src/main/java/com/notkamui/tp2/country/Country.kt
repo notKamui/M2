@@ -84,6 +84,8 @@ data class Country(
             density = DensityFact(29, Rank(193, 248)),
             perCapitalGDP = PerCapitalGDPFact(12693, Rank(146, 216)),
         ) { BahamasFlag() }
+
+        fun all() = listOf(France, Japan, Monaco, Bahamas)
     }
 }
 

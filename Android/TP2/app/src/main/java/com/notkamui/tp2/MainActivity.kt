@@ -5,14 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,14 +26,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.notkamui.tp2.country.Country
 import com.notkamui.tp2.country.CountryDisplayer
+import com.notkamui.tp2.country.FlagsDisplayer
 import com.notkamui.tp2.country.RankedValueDisplayer
 import com.notkamui.tp2.ui.theme.TP2Theme
 
@@ -37,13 +46,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TP2Theme {
-                HelloWorld("Android")
+                App()
             }
         }
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
 fun HelloWorld(name: String) {
     var counter by remember { mutableStateOf(0) }
@@ -54,8 +62,22 @@ fun HelloWorld(name: String) {
     ) {
         Column {
             HelloWorldMessage(name, counter)
-            CountryDisplayer(Country.Japan)
             WorldMap(mapClick = { counter++ }, mapDoubleClick = { counter += 4 })
+        }
+    }
+}
+
+@Composable
+fun App() {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
+            .padding(10.dp), Arrangement.spacedBy(10.dp), Alignment.CenterHorizontally) {
+        var selected: Country by remember { mutableStateOf(Country.France) }
+        CountryDisplayer(selected)
+        Box(Modifier.width(200.dp)) {
+            FlagsDisplayer(Country.all()) { clicked -> selected = clicked }
         }
     }
 }
@@ -99,6 +121,6 @@ fun Countries() {
 @ExperimentalFoundationApi
 fun DefaultPreview() {
     TP2Theme {
-        HelloWorld("Kamui")
+        App()
     }
 }
