@@ -63,21 +63,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun HelloWorld(name: String) {
-    var counter by remember { mutableStateOf(0) }
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.White
-    ) {
-        Column {
-            HelloWorldMessage(name, counter)
-            WorldMap(mapClick = { counter++ }, mapDoubleClick = { counter += 4 })
-        }
-    }
-}
-
-@Composable
 fun App() {
     var mainComponent by remember { mutableStateOf<MainComponent>(FlagsComponent) }
 
@@ -114,52 +99,6 @@ fun App() {
                     mainComponent = CountryComponent(it)
                 }
                 is CountryComponent -> CountryDisplayer(component.country)
-            }
-        }
-    }
-
-//    Column(
-//        Modifier
-//            .fillMaxSize()
-//            .scrollable(rememberScrollState(), orientation = Orientation.Vertical)
-//            .padding(10.dp), Arrangement.spacedBy(10.dp), Alignment.CenterHorizontally) {
-//        var selected: Country by remember { mutableStateOf(Country.France) }
-//        CountryDisplayer(selected)
-//        Box(Modifier.width(200.dp)) {
-//            FlagsDisplayer(Country.all()) { clicked -> selected = clicked }
-//        }
-//    }
-}
-
-@Composable
-fun HelloWorldMessage(name: String, counter: Int) {
-    Text(text = "Hello $name! Counter: $counter", color = Color.Black, fontSize = 32.sp)
-}
-
-@Composable
-fun WorldMap(mapClick: () -> Unit, mapDoubleClick: () -> Unit) {
-    Image(
-        painter = painterResource(R.drawable.equirectangular_world_map),
-        contentDescription = "World map",
-        modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = { mapClick() },
-                    onDoubleTap = { mapDoubleClick() }
-                )
-            }
-    )
-}
-
-@ExperimentalFoundationApi
-@Composable
-fun Countries() {
-    val countries = listOf(Country.France, Country.Japan, Country.Monaco, Country.Bahamas)
-    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-        items(countries.size) { index ->
-            val country = countries[index]
-            Box(Modifier.height(IntrinsicSize.Min)) {
-                RankedValueDisplayer(country.area.value, country.area.unit, country.area.rank)
             }
         }
     }
