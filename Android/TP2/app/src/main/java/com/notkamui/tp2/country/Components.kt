@@ -1,5 +1,6 @@
 package com.notkamui.tp2.country
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -25,6 +26,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.ProduceStateScope
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -129,7 +131,7 @@ fun CountryDisplayer(country: Country) {
             }
         }
         val (latitude, longitude) = country.capitalLocation
-        val map by createMapWithLocation(latitude, longitude)
+        val map by createMapWithLocation2(latitude, longitude)
         map?.let { Image(bitmap = it, contentDescription = null) }
     }
 }
@@ -219,7 +221,28 @@ fun ComputeWidth(labels: @Composable () -> Unit, content: @Composable (width: Dp
 }
 
 @Composable
-fun createMapWithLocation(latitude: Float, longitude: Float): State<ImageBitmap?> {
+fun createMapWithLocation(latitude: Float, longitude: Float): State<ImageBitmap?> =
+    createMapWithLocationAndStrategy(latitude, longitude)
+
+@Composable
+fun createMapWithLocation2(latitude: Float, longitude: Float): State<ImageBitmap?> =
+    createMapWithLocationAndStrategy(latitude, longitude) { image, context ->
+        val originalImageBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.equirectangular_world_map).asImageBitmap()
+        while (true) {
+            value = originalImageBitmap
+            delay(1000L)
+            value = image
+            delay(1000L)
+        }
+        image
+    }
+
+@Composable
+fun createMapWithLocationAndStrategy(
+    latitude: Float,
+    longitude: Float,
+    strategy: suspend ProduceStateScope<ImageBitmap?>.(ImageBitmap, Context) -> ImageBitmap = { image, _ -> image }
+): State<ImageBitmap?> {
     val context = LocalContext.current
     return produceState<ImageBitmap?>(initialValue = null, latitude, longitude) {
         val mapBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.equirectangular_world_map, BitmapFactory.Options().also { it.inMutable = true })
@@ -231,7 +254,7 @@ fun createMapWithLocation(latitude: Float, longitude: Float): State<ImageBitmap?
         paint.style = Paint.Style.FILL_AND_STROKE
         paint.color = Color.Blue.toArgb()
         canvas.drawCircle(x, y, radius, paint)
-        value = mapBitmap.asImageBitmap()
+        value = strategy(mapBitmap.asImageBitmap(), context)
     }
 }
 
