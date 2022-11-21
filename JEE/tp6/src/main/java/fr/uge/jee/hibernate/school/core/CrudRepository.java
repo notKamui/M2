@@ -1,16 +1,18 @@
 package fr.uge.jee.hibernate.school.core;
 
+import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import static fr.uge.jee.hibernate.util.DatabaseUtils.transaction;
 import static java.util.Objects.requireNonNull;
 
-public abstract class CrudRepository<E extends IdEntity<Id>, Id> {
+public interface CrudRepository<E extends IdEntity<Id>, Id extends Serializable> {
 
-    protected abstract Class<E> getEntityClass();
+    Class<E> getEntityClass();
 
-    public Id create(E entity) {
+    default Id create(E entity) {
         requireNonNull(entity);
 
         try {
@@ -23,7 +25,7 @@ public abstract class CrudRepository<E extends IdEntity<Id>, Id> {
         }
     }
 
-    public Optional<E> findById(Id id) {
+    default Optional<E> findById(Id id) {
         requireNonNull(id);
 
         try {
@@ -35,7 +37,20 @@ public abstract class CrudRepository<E extends IdEntity<Id>, Id> {
         }
     }
 
-    public boolean update(Id id, E entity) {
+    default Set<E> findAll() {
+        try {
+            return transaction(em -> {
+                var query = em
+                    .createQuery("SELECT e FROM " + getEntityClass().getSimpleName() + " e", getEntityClass());
+
+                return Set.copyOf(query.getResultList());
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    default boolean update(Id id, E entity) {
         requireNonNull(id);
         requireNonNull(entity);
 
@@ -53,7 +68,7 @@ public abstract class CrudRepository<E extends IdEntity<Id>, Id> {
         }
     }
 
-    public boolean update(Id id, Consumer<E> apply) {
+    default boolean update(Id id, Consumer<E> apply) {
         requireNonNull(id);
         requireNonNull(apply);
 
@@ -72,7 +87,7 @@ public abstract class CrudRepository<E extends IdEntity<Id>, Id> {
         }
     }
 
-    public boolean delete(Id id) {
+    default boolean delete(Id id) {
         requireNonNull(id);
 
         try {

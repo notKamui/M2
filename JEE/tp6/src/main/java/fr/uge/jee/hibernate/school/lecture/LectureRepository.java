@@ -1,7 +1,13 @@
 package fr.uge.jee.hibernate.school.lecture;
 
 import fr.uge.jee.hibernate.school.core.CrudRepository;
+import fr.uge.jee.hibernate.school.student.Student;
+import fr.uge.jee.hibernate.util.DatabaseUtils;
+
+import java.util.Set;
 import java.util.UUID;
+
+import static fr.uge.jee.hibernate.util.DatabaseUtils.transaction;
 
 public class LectureRepository extends CrudRepository<Lecture, UUID> {
 
@@ -17,5 +23,19 @@ public class LectureRepository extends CrudRepository<Lecture, UUID> {
     @Override
     protected Class<Lecture> getEntityClass() {
         return Lecture.class;
+    }
+
+    public Set<Student> getAttendees(UUID lectureId) {
+        try {
+            return transaction(em -> {
+                var query = em
+                    .createQuery("SELECT s FROM Student s JOIN s.lectures l WHERE l.id = :lectureId", Student.class)
+                    .setParameter("lectureId", lectureId);
+
+                return Set.copyOf(query.getResultList());
+            });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

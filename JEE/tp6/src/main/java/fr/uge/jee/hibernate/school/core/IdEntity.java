@@ -1,6 +1,8 @@
 package fr.uge.jee.hibernate.school.core;
 
-public interface IdEntity<Id> {
+import java.io.Serializable;
+
+public interface IdEntity<Id extends Serializable> {
 
     Id getId();
 
