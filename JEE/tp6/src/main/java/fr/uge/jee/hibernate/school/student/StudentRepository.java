@@ -2,7 +2,7 @@ package fr.uge.jee.hibernate.school.student;
 
 import fr.uge.jee.hibernate.school.comment.Comment;
 import fr.uge.jee.hibernate.school.comment.CommentRepository;
-import fr.uge.jee.hibernate.school.core.CrudRepository;
+import fr.uge.jee.hibernate.core.CrudRepository;
 import fr.uge.jee.hibernate.school.lecture.Lecture;
 import fr.uge.jee.hibernate.school.university.UniversityRepository;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
-public class StudentRepository extends CrudRepository<Student, UUID> {
+public class StudentRepository implements CrudRepository<Student, UUID> {
 
     private final static StudentRepository INSTANCE = new StudentRepository();
 
@@ -24,7 +24,7 @@ public class StudentRepository extends CrudRepository<Student, UUID> {
     private final CommentRepository commentRepository = CommentRepository.instance();
 
     @Override
-    protected Class<Student> getEntityClass() {
+    public Class<Student> getEntityClass() {
         return Student.class;
     }
 

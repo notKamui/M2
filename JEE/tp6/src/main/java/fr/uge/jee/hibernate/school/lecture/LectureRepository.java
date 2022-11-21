@@ -1,15 +1,14 @@
 package fr.uge.jee.hibernate.school.lecture;
 
-import fr.uge.jee.hibernate.school.core.CrudRepository;
+import fr.uge.jee.hibernate.core.CrudRepository;
 import fr.uge.jee.hibernate.school.student.Student;
-import fr.uge.jee.hibernate.util.DatabaseUtils;
 
 import java.util.Set;
 import java.util.UUID;
 
 import static fr.uge.jee.hibernate.util.DatabaseUtils.transaction;
 
-public class LectureRepository extends CrudRepository<Lecture, UUID> {
+public class LectureRepository implements CrudRepository<Lecture, UUID> {
 
     private final static LectureRepository INSTANCE = new LectureRepository();
 
@@ -21,7 +20,7 @@ public class LectureRepository extends CrudRepository<Lecture, UUID> {
     }
 
     @Override
-    protected Class<Lecture> getEntityClass() {
+    public Class<Lecture> getEntityClass() {
         return Lecture.class;
     }
 

@@ -1,7 +1,7 @@
 package fr.uge.jee.hibernate.school.student;
 
 import fr.uge.jee.hibernate.school.comment.Comment;
-import fr.uge.jee.hibernate.school.core.IdEntity;
+import fr.uge.jee.hibernate.core.IdEntity;
 import fr.uge.jee.hibernate.school.lecture.Lecture;
 import fr.uge.jee.hibernate.school.university.University;
 
@@ -27,13 +27,14 @@ public class Student implements IdEntity<UUID> {
     @Embedded
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private University university;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id")
     private List<Comment> comments;
 
-    @OneToMany
+    @ManyToMany
     private Set<Lecture> lectures;
 
     public Student() {

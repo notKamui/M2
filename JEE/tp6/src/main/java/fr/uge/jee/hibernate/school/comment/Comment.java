@@ -1,6 +1,6 @@
 package fr.uge.jee.hibernate.school.comment;
 
-import fr.uge.jee.hibernate.school.core.IdEntity;
+import fr.uge.jee.hibernate.core.IdEntity;
 
 import javax.persistence.*;
 import java.util.UUID;

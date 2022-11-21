@@ -1,10 +1,10 @@
 package fr.uge.jee.hibernate.school.university;
 
-import fr.uge.jee.hibernate.school.core.CrudRepository;
+import fr.uge.jee.hibernate.core.CrudRepository;
 
 import java.util.UUID;
 
-public class UniversityRepository extends CrudRepository<University, UUID> {
+public class UniversityRepository implements CrudRepository<University, UUID> {
 
     private final static UniversityRepository INSTANCE = new UniversityRepository();
 
@@ -16,7 +16,7 @@ public class UniversityRepository extends CrudRepository<University, UUID> {
     }
 
     @Override
-    protected Class<University> getEntityClass() {
+    public Class<University> getEntityClass() {
         return University.class;
     }
 }
