@@ -120,7 +120,8 @@ public final class DrugRepository {
 
     private void purgeLeastGet(Jedis jedis) {
         if (jedis.dbSize() < CACHE_MAX_SIZE) return;
-        var leastUsed = jedis.zpopmin("drug_get", 1).stream().findFirst().orElseThrow();
+        var leastUsed = jedis.zpopmin("drug_get");
+        if (leastUsed == null) throw new IllegalStateException("Least used is null");
         jedis.del(leastUsed.getElement());
     }
 
