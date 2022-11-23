@@ -2,6 +2,7 @@ package fr.uge;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.ZAddParams;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -115,7 +116,7 @@ public final class DrugRepository {
 
     private void incrementResourceGet(Jedis jedis, int cip7) {
         purgeLeastGet(jedis);
-        jedis.zadd("drug_get", 1.0, key(cip7));
+        jedis.zaddIncr("drug_get", 1.0, key(cip7), ZAddParams.zAddParams());
     }
 
     private void purgeLeastGet(Jedis jedis) {
