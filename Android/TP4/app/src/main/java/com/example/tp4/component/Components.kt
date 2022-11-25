@@ -28,13 +28,9 @@ private val MAP_BOUNDS = RectF(
     41.3509f /* min latitude */
 )
 
-private val PHI0 = (MAP_BOUNDS.top + MAP_BOUNDS.bottom) / 2
-private val LAMBDA0 = (MAP_BOUNDS.left + MAP_BOUNDS.right) / 2
-private val COS_PHI0 = cos(PHI0)
-
 private fun Town.project(): Pair<Float, Float> {
-    val x = COS_PHI0 * (longitude - LAMBDA0)
-    val y = latitude - PHI0
+    val x = 1f - ((latitude - MAP_BOUNDS.bottom) / (MAP_BOUNDS.top - MAP_BOUNDS.bottom))
+    val y = (longitude - MAP_BOUNDS.left) / (MAP_BOUNDS.right - MAP_BOUNDS.left)
     return x to y
 }
 
@@ -52,8 +48,8 @@ fun TownDisplayer(towns: Set<Town>, image: ImageBitmap) {
             drawImage(image, dstSize = size)
             towns.forEach { town ->
                 val (x, y) = town.project()
-                val (actualX, actualY) = (x * 10f).dp.toPx() + 390.dp.toPx() / 2 to (y * 10f).dp.toPx() + 390.dp.toPx() / 2
-                drawCircle(Color.Cyan, center = Offset(actualX, actualY), radius = 5f)
+                val (actualX, actualY) = x * size.height to y * size.width
+                drawCircle(Color.Cyan, center = Offset(actualX, actualY), radius = 10f)
             }
         }
     }
