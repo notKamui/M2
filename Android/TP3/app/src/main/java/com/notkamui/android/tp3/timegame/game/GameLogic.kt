@@ -1,5 +1,6 @@
 package com.notkamui.android.tp3.timegame.game
 
+import android.media.MediaPlayer
 import android.os.SystemClock
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,9 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.notkamui.android.tp3.R
 import com.notkamui.android.tp3.timegame.component.Chronometer
 import com.notkamui.android.tp3.timegame.component.DeltaTimeDisplayer
 import com.notkamui.android.tp3.timegame.game.GameState.STARTING
@@ -100,6 +103,13 @@ fun GameManager() {
                 val difference = verdict!! - expectedTimeAsMillis
                 val sign = if (difference < 0) "-" else "+"
                 val percent = (abs(difference).toFloat() / expectedTimeAsMillis.toFloat()) * 100f
+
+                MediaPlayer.create(LocalContext.current, when(percent) {
+                    in 0f..20f -> R.raw.claps
+                    in 20f..40f -> R.raw.cough
+                    else -> R.raw.booing
+                }).start()
+
                 DeltaTimeDisplayer(
                     abs(difference),
                     prefix = "Time difference: $sign",
