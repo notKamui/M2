@@ -20,9 +20,9 @@ public class Application {
         try {
             var pool = new JedisPool(new JedisPoolConfig(), "localhost");
             var db = DriverManager.getConnection(
-                "jdbc:postgresql://sqletud.u-pem.fr/jimmy.teillard_db",
-                "jimmy.teillard",
-                "potato"
+                "jdbc:postgresql://localhost:5432/postgres",
+                "postgres",
+                "postgres"
             );
             return new Application(pool, db);
         } catch (SQLException e) {
