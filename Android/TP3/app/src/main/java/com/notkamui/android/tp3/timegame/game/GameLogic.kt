@@ -8,6 +8,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Slider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,10 +25,10 @@ import kotlin.math.abs
 
 @Composable
 fun ChronoGame(expectedTime: Long, onVerdict: (Long) -> Unit) {
-    var isRunning by remember { mutableStateOf(false) }
-    var hidden by remember { mutableStateOf(false) }
-    var startTime by remember { mutableStateOf(0L) }
-    var endTime by remember { mutableStateOf<Long?>(0L) }
+    var isRunning by rememberSaveable { mutableStateOf(false) }
+    var hidden by rememberSaveable { mutableStateOf(false) }
+    var startTime by rememberSaveable { mutableStateOf(0L) }
+    var endTime by rememberSaveable { mutableStateOf<Long?>(0L) }
     Column(
         Modifier.padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -73,8 +74,8 @@ fun ChronoGame(expectedTime: Long, onVerdict: (Long) -> Unit) {
 @Composable
 @Preview(showBackground = true)
 fun GameManager() {
-    var gameState by remember { mutableStateOf(STARTING) }
-    var expectedTime by remember { mutableStateOf(10L) }
+    var gameState by rememberSaveable { mutableStateOf(STARTING) }
+    var expectedTime by rememberSaveable { mutableStateOf(10L) }
     Column(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,7 +92,7 @@ fun GameManager() {
                 Text(text = "Begin")
             }
         } else {
-            var verdict by remember { mutableStateOf<Long?>(null) }
+            var verdict by rememberSaveable { mutableStateOf<Long?>(null) }
             val expectedTimeAsMillis = expectedTime * 1000
             ChronoGame(expectedTimeAsMillis) { elapsed ->
                 gameState = STOPPED
