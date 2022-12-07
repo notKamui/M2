@@ -2,9 +2,7 @@ package fr.uge.jee.hibernate.cinema.vote;
 
 import fr.uge.jee.hibernate.core.CrudRepository;
 
-import java.util.UUID;
-
-public class VoteRepository implements CrudRepository<Vote, UUID> {
+public class VoteRepository implements CrudRepository<Vote, Long> {
 
     private final static VoteRepository INSTANCE = new VoteRepository();
 

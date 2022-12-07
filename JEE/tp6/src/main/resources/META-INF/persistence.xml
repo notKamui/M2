@@ -9,7 +9,7 @@
         <properties>
             <!-- database connection -->
             <property name="javax.persistence.jdbc.driver" value="com.p6spy.engine.spy.P6SpyDriver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:p6spy:h2:tcp://localhost/~/h2DB" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:p6spy:h2:tcp://localhost/./h2DB" />
             <property name="javax.persistence.jdbc.user" value="sa" />
             <property name="javax.persistence.jdbc.password" value="" />
             <property name="hibernate.show_sql" value="true" />

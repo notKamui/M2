@@ -6,28 +6,32 @@ import fr.uge.jee.hibernate.core.IdEntity;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
 @Entity
-@Table(name = "Movies")
-public class Movie implements IdEntity<UUID> {
+@Table(name = "Videos")
+public class Video implements IdEntity<Long> {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private long id;
 
     @Column
-    @OneToMany(mappedBy = "movie")
+    private String title;
+
+    @Column
+    @OneToMany(mappedBy = "video")
     private Set<Vote> votes;
 
-    public Movie() {
+    public Video() {
     }
 
-    public Movie(Set<Vote> votes) {
+    public Video(String title, Set<Vote> votes) {
+        requireNonNull(title);
         requireNonNull(votes);
 
+        this.title = title;
         this.votes = new HashSet<>();
         for (Vote vote : votes) {
             addVote(vote);
@@ -35,15 +39,24 @@ public class Movie implements IdEntity<UUID> {
     }
 
     @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(Long id) {
         requireNonNull(id);
 
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        requireNonNull(title);
+        this.title = title;
     }
 
     public Set<Vote> getVotes() {
@@ -62,6 +75,8 @@ public class Movie implements IdEntity<UUID> {
     public void addVote(Vote vote) {
         requireNonNull(vote);
 
+        var oldVote = votes.stream().filter(v -> vote.getViewer().getNickname().equals(v.getViewer().getNickname())).findFirst();
+        oldVote.ifPresent(votes::remove);
         votes.add(vote);
         vote.setMovie(this);
     }

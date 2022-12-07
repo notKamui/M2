@@ -1,23 +1,20 @@
 package fr.uge.jee.hibernate.cinema.viewer;
 
 import fr.uge.jee.hibernate.core.IdEntity;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Objects;
-import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "Viewers")
-public class Viewer implements IdEntity<UUID> {
+public class Viewer implements IdEntity<Long> {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     private String nickname;
 
@@ -31,12 +28,12 @@ public class Viewer implements IdEntity<UUID> {
     }
 
     @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(Long id) {
         requireNonNull(id);
 
         this.id = id;
