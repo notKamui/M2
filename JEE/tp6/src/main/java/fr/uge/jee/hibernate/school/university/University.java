@@ -1,23 +1,25 @@
 package fr.uge.jee.hibernate.school.university;
 
 import fr.uge.jee.hibernate.core.IdEntity;
-
 import fr.uge.jee.hibernate.school.student.Student;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "Universities")
-public class University implements IdEntity<UUID> {
+public class University implements IdEntity<Long> {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -35,12 +37,12 @@ public class University implements IdEntity<UUID> {
     }
 
     @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

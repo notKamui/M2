@@ -1,16 +1,14 @@
 package fr.uge.jee.hibernate.school.student;
 
+import fr.uge.jee.hibernate.core.CrudRepository;
 import fr.uge.jee.hibernate.school.comment.Comment;
 import fr.uge.jee.hibernate.school.comment.CommentRepository;
-import fr.uge.jee.hibernate.core.CrudRepository;
 import fr.uge.jee.hibernate.school.lecture.Lecture;
 import fr.uge.jee.hibernate.school.university.UniversityRepository;
-
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
-public class StudentRepository implements CrudRepository<Student, UUID> {
+public class StudentRepository implements CrudRepository<Student, Long> {
 
     private final static StudentRepository INSTANCE = new StudentRepository();
 
@@ -28,41 +26,40 @@ public class StudentRepository implements CrudRepository<Student, UUID> {
         return Student.class;
     }
 
-    public boolean updateUniversity(UUID studentId, UUID universityId) {
+    public boolean updateUniversity(Long studentId, Long universityId) {
         var university = UniversityRepository.instance().findById(universityId);
-        if (university.isEmpty()) {
-            return false;
-        }
-        return update(studentId, student -> student.setUniversity(university.get()));
+        return university.filter(value -> update(studentId, student -> student.setUniversity(value))).isPresent();
     }
 
-    public boolean updateAddress(UUID studentId, Address address) {
+    public boolean updateAddress(Long studentId, Address address) {
         return update(studentId, student -> student.setAddress(address));
     }
 
-    public UUID addLecture(UUID userId, Lecture lecture) {
+    public Long addLecture(Long userId, Lecture lecture) {
         update(userId, student -> student.getLectures().add(lecture));
         return lecture.getId();
     }
 
-    public boolean removeLecture(UUID userId, UUID lectureId) {
+    public boolean removeLecture(Long userId, Long lectureId) {
         return update(userId, student -> student.getLectures().removeIf(lecture -> lecture.getId().equals(lectureId)));
     }
 
-    public Optional<Set<Lecture>> getLectures(UUID userId) {
+    public Optional<Set<Lecture>> getLectures(Long userId) {
         return findById(userId).map(Student::getLectures);
     }
 
-    public UUID addComment(UUID userId, String content) {
-        var comment = new Comment(content);
-        commentRepository.create(comment);
-        update(userId, student -> student.getComments().add(comment));
-        return comment.getId();
+    public Long addComment(Long userId, String content) {
+        var commentWrapper = new Object() { Comment comment; };
+        update(userId, student -> {
+            commentWrapper.comment = new Comment(content, student);
+            commentRepository.create(commentWrapper.comment);
+            student.getComments().add(commentWrapper.comment);
+        });
+        return commentWrapper.comment.getId();
     }
 
-    public boolean removeComment(UUID userId, UUID commentId) {
+    public boolean removeComment(Long userId, Long commentId) {
         var comment = commentRepository.findById(commentId);
-        if (comment.isEmpty()) return false;
-        return update(userId, student -> student.getComments().remove(comment.get()));
+        return comment.filter(value -> update(userId, student -> student.getComments().remove(value))).isPresent();
     }
 }

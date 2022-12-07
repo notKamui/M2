@@ -1,26 +1,34 @@
 package fr.uge.jee.hibernate.school.student;
 
-import fr.uge.jee.hibernate.school.comment.Comment;
 import fr.uge.jee.hibernate.core.IdEntity;
+import fr.uge.jee.hibernate.school.comment.Comment;
 import fr.uge.jee.hibernate.school.lecture.Lecture;
 import fr.uge.jee.hibernate.school.university.University;
-
 import java.util.HashSet;
-import java.util.Objects;
-import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "Students")
-public class Student implements IdEntity<UUID> {
+public class Student implements IdEntity<Long> {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -54,12 +62,12 @@ public class Student implements IdEntity<UUID> {
     }
 
     @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

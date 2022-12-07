@@ -2,9 +2,7 @@ package fr.uge.jee.hibernate.school.university;
 
 import fr.uge.jee.hibernate.core.CrudRepository;
 
-import java.util.UUID;
-
-public class UniversityRepository implements CrudRepository<University, UUID> {
+public class UniversityRepository implements CrudRepository<University, Long> {
 
     private final static UniversityRepository INSTANCE = new UniversityRepository();
 

@@ -2,7 +2,6 @@ package fr.uge.jee.hibernate.school.comment;
 
 import fr.uge.jee.hibernate.core.IdEntity;
 import fr.uge.jee.hibernate.school.student.Student;
-import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,11 +14,11 @@ import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "Comments")
-public class Comment implements IdEntity<UUID> {
+public class Comment implements IdEntity<Long> {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     @Column(name = "content")
     private String content;
@@ -39,12 +38,12 @@ public class Comment implements IdEntity<UUID> {
     }
 
     @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
