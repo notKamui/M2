@@ -5,10 +5,14 @@ import fr.uge.jee.hibernate.core.IdEntity;
 import fr.uge.jee.hibernate.school.lecture.Lecture;
 import fr.uge.jee.hibernate.school.university.University;
 
+import java.util.HashSet;
+import java.util.Objects;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "Students")
@@ -46,7 +50,7 @@ public class Student implements IdEntity<UUID> {
         this.address = address;
         this.university = university;
         this.comments = comments;
-        this.lectures = lectures;
+        setLectures(lectures);
     }
 
     @Override
@@ -104,6 +108,27 @@ public class Student implements IdEntity<UUID> {
     }
 
     public void setLectures(Set<Lecture> lectures) {
-        this.lectures = lectures;
+        requireNonNull(lectures);
+
+        this.lectures = new HashSet<>();
+        for (Lecture lecture : lectures) {
+            addLecture(lecture);
+        }
+    }
+
+    public void addLecture(Lecture lecture) {
+        requireNonNull(lecture);
+
+        if (lectures.contains(lecture)) {
+            return;
+        }
+
+        lectures.add(lecture);
+    }
+
+    public void removeLecture(Lecture lecture) {
+        requireNonNull(lecture);
+
+        lectures.remove(lecture);
     }
 }

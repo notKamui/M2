@@ -1,10 +1,9 @@
 package fr.uge.jee.hibernate.cinema;
 
-import fr.uge.jee.hibernate.cinema.movie.Video;
-import fr.uge.jee.hibernate.cinema.movie.VideoRepository;
+import fr.uge.jee.hibernate.cinema.video.Video;
+import fr.uge.jee.hibernate.cinema.video.VideoRepository;
 import fr.uge.jee.hibernate.cinema.viewer.Viewer;
 import fr.uge.jee.hibernate.cinema.viewer.ViewerRepository;
-import fr.uge.jee.hibernate.cinema.vote.VoteRepository;
 import java.util.HashSet;
 
 public class Application {

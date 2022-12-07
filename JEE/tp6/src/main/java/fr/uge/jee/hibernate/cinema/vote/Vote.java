@@ -1,6 +1,6 @@
 package fr.uge.jee.hibernate.cinema.vote;
 
-import fr.uge.jee.hibernate.cinema.movie.Video;
+import fr.uge.jee.hibernate.cinema.video.Video;
 import fr.uge.jee.hibernate.cinema.viewer.Viewer;
 import fr.uge.jee.hibernate.core.IdEntity;
 import javax.persistence.Column;

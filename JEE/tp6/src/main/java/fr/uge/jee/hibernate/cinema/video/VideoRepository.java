@@ -1,4 +1,4 @@
-package fr.uge.jee.hibernate.cinema.movie;
+package fr.uge.jee.hibernate.cinema.video;
 
 import fr.uge.jee.hibernate.cinema.viewer.Viewer;
 import fr.uge.jee.hibernate.cinema.vote.Vote;
