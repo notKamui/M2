@@ -5,6 +5,7 @@ import fr.uge.jee.hibernate.cinema.viewer.Viewer;
 import fr.uge.jee.hibernate.core.IdEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -27,10 +28,10 @@ public class Vote implements IdEntity<Long> {
     @Column
     private int type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Video video;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Viewer viewer;
 
     public Vote() {

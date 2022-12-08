@@ -21,7 +21,7 @@ public class Video implements IdEntity<Long> {
     private String title;
 
     @Column
-    @OneToMany(mappedBy = "video")
+    @OneToMany(cascade = { CascadeType.ALL }, mappedBy = "video")
     private Set<Vote> votes;
 
     public Video() {

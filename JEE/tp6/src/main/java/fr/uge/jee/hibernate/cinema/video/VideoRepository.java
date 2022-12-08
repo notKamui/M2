@@ -28,19 +28,26 @@ public class VideoRepository implements CrudRepository<Video, Long> {
         requireNonNull(video);
         requireNonNull(viewer);
 
-        var vote = new Vote(Vote.UPVOTE, video, viewer);
-        VoteRepository.instance().create(vote);
-        video.addVote(vote);
-        return true;
+        return addVote(video, viewer, Vote.UPVOTE);
     }
 
     public boolean addDownvote(Video video, Viewer viewer) {
         requireNonNull(video);
         requireNonNull(viewer);
 
-        var vote = new Vote(Vote.DOWNVOTE, video, viewer);
-        VoteRepository.instance().create(vote);
-        video.addVote(vote);
+        return addVote(video, viewer, Vote.DOWNVOTE);
+    }
+
+    private boolean addVote(Video video, Viewer viewer, int type) {
+        var vote = new Vote(type, video, viewer);
+        try {
+            transaction(em -> {
+                VoteRepository.instance().create(vote);
+                video.addVote(vote);
+            });
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 
