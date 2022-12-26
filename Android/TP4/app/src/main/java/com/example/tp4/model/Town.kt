@@ -5,6 +5,8 @@ import android.graphics.RectF
 import java.io.FileInputStream
 import java.util.zip.GZIPInputStream
 import kotlin.math.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 data class Town(val name: String, val latitude: Float, val longitude: Float, val zipcode: String) {
     companion object {
@@ -23,14 +25,27 @@ data class Town(val name: String, val latitude: Float, val longitude: Float, val
             else null
         }
 
-        fun parseFile(context: Context, path: String) =
-            context.assets.open(path).bufferedReader()
-                .use { it.lineSequence().mapNotNull { l -> parseLine(l) }.toList() }
+        fun parseFile(context: Context, path: String): List<Town> =
+            context.assets.open(path).bufferedReader().use { it
+                .lineSequence()
+                .mapNotNull { l -> parseLine(l) }
+                .toList() }
+
+        fun parseFileAsync(context: Context, path: String): Flow<TownListLoading> = flow {
+            context.assets.open(path).bufferedReader().use {
+                val towns = mutableListOf<Town>()
+                for (line in it.lineSequence()) {
+                    val town = parseLine(line) ?: continue
+                    towns += town
+                    emit(TownListProgress(towns.size))
+                }
+                emit(TownListResult(towns))
+            }
+        }
     }
 }
 
-val MIN_DISTANCE = 100000.0
-val EARTH_RADIUS = 6372800.0
+private const val EARTH_RADIUS = 6372800.0
 
 /**
  * Haversine formula. Giving great-circle distances between two points on a sphere from their longitudes and latitudes.
@@ -52,25 +67,10 @@ fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
     return EARTH_RADIUS * c;
 }
 
-fun MutableList<Town>.addRandomTown(source: List<Town>) {
-    fun isValidTown(town: Town) = this.all {
-        it != town && haversine(
-            it.latitude.toDouble(),
-            it.longitude.toDouble(),
-            town.latitude.toDouble(),
-            town.longitude.toDouble()
-        ) > MIN_DISTANCE
-    }
-
-    var town = source.random()
-    while (!isValidTown(town)) town = source.random()
-    add(town)
-}
-
 fun Collection<Town>.computeRectBounds(): RectF {
-    val minLat = this.minOf { it.latitude }
-    val maxLat = this.maxOf { it.latitude }
-    val minLon = this.minOf { it.longitude }
-    val maxLon = this.maxOf { it.longitude }
+    val minLat = minOf { it.latitude }
+    val maxLat = maxOf { it.latitude }
+    val minLon = minOf { it.longitude }
+    val maxLon = maxOf { it.longitude }
     return RectF(minLon, maxLat, maxLon, minLat)
 }
