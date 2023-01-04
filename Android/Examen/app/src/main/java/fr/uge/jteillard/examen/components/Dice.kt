@@ -154,7 +154,7 @@ fun MultipleDice(
         onThrow(dices.map { it.second })
     }
 
-    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         repeat(diceNumber) { diceId ->
             Box(
                 Modifier
@@ -201,7 +201,7 @@ fun MultipleSelectableDice(
         onThrow(dices.map { it.second })
     }
 
-    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         repeat(diceNumber) { diceId ->
             val (diceThrowId, value, selected) = dices[diceId]
             Box(

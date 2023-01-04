@@ -47,20 +47,20 @@ private fun GameScreen(onFinish: (Int) -> Unit) {
     var currentValue by rememberSaveable { mutableStateOf(0) }
 
     LaunchedEffect(currentValue) {
-        if (target == currentValue) onFinish(currentValue)
+        if (target == currentValue) onFinish(throwId)
     }
 
     Column(
         Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Target : $target", fontSize = 16.sp)
+        MultipleSelectableDice(5, throwId, onThrow = { currentValue = it.sum() })
         Text(text = "Diff : ${currentValue - target}", fontSize = 16.sp)
         Button(onClick = { throwId++ }) {
             Text(text = "Throw")
         }
-        MultipleSelectableDice(5, throwId, onThrow = { currentValue = it.sum() })
     }
 }
 
