@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Exam</string>
+    <string name="wrong_country">Mauvais pays</string>
+    <string name="found_country">Pays correct</string>
+</resources>
