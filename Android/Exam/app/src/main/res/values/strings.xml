@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Exam</string>
+    <string name="wrong_country">Wrong country</string>
+    <string name="found_country">Found country</string>
+</resources>
