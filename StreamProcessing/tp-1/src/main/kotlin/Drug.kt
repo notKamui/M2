@@ -1,0 +1,1 @@
+data class Drug(val cip: Int, val price: Double)

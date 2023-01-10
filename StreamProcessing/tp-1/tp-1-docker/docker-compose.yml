@@ -9,3 +9,18 @@ services:
     hostname: zookeeper
     volumes:
       - ./config:/config
+
+  postgres:
+    image: postgres:9.5.19-alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
