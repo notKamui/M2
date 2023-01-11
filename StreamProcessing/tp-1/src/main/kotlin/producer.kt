@@ -5,18 +5,22 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
 fun main() {
+    val (drugs, pharmas) = getDrugsAndPharma()
+
+    KafkaProducer<String, ByteArray>(Properties().apply {
+        put("bootstrap.servers", "localhost:9092")
+        put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+        put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
+        put("value.deserializer.specific.avro.reader", "true")
+    }).producerLoop(drugs, pharmas)
+}
+
+fun getDrugsAndPharma(): Pair<List<Drug>, List<Pharma>> {
     val databaseConnection = DriverManager.getConnection(
         "jdbc:postgresql://localhost:5432/postgres",
         "postgres",
         "postgres"
     )
-
-    val producer = KafkaProducer<String, ByteArray>(Properties().apply {
-        put("bootstrap.servers", "localhost:9092")
-        put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
-        put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
-        put("value.deserializer.specific.avro.reader", "true")
-    })
 
     val drugs = buildList {
         databaseConnection.createStatement().executeQuery("SELECT * FROM drugs4projet").apply {
@@ -40,30 +44,28 @@ fun main() {
             }
         }
     }
-
-    val p = fakePrescription(drugs, pharmas)
-    println(p)
-    println(p.toAvroBinary().contentToString())
-
-    producer.use { kafka ->
-        var sending = false
-        while (true) {
-            val prescription = fakePrescription(drugs, pharmas)
-            val record = ProducerRecord("prescriptionsBin", "prescription-${Date()}", prescription.toAvroBinary())
-            if (!sending) {
-                sending = true
-                kafka.send(record) { _, e ->
-                    if (e?.printStackTrace() != null) return@send
-                    sending = false
-                    println("Value sent: $prescription")
-                }
-            }
-
-            Thread.sleep(kotlin.random.Random.nextLong(500))
-        }
-    }
-
     databaseConnection.close()
+
+    return drugs to pharmas
 }
 
+fun KafkaProducer<String, ByteArray>.producerLoop(
+    drugs: List<Drug>,
+    pharmas: List<Pharma>
+): Unit = use { kafka ->
+    var sending = false
+    while (true) {
+        val prescription = fakePrescription(drugs, pharmas)
+        val record = ProducerRecord("prescriptionsBin", "prescription-${Date()}", prescription.toAvroBinary())
+        if (!sending) {
+            sending = true
+            kafka.send(record) { _, e ->
+                if (e?.printStackTrace() != null) return@send
+                sending = false
+                println("Value sent: $prescription")
+            }
+        }
 
+        Thread.sleep(kotlin.random.Random.nextLong(500))
+    }
+}
