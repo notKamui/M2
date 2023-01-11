@@ -1,6 +1,7 @@
 import java.sql.DriverManager
 import java.util.Date
 import java.util.Properties
+import kotlin.random.Random
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -66,6 +67,6 @@ fun KafkaProducer<String, ByteArray>.producerLoop(
             }
         }
 
-        Thread.sleep(kotlin.random.Random.nextLong(500))
+        Thread.sleep(Random.nextLong(500))
     }
 }
