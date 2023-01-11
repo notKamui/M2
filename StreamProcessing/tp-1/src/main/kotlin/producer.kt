@@ -1,18 +1,21 @@
-import com.github.javafaker.Faker
 import java.sql.DriverManager
 import java.util.Date
 import java.util.Properties
-import java.util.Random
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 
 fun main() {
-    val databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres")
+    val databaseConnection = DriverManager.getConnection(
+        "jdbc:postgresql://localhost:5432/postgres",
+        "postgres",
+        "postgres"
+    )
 
-    val producer = KafkaProducer<String, String>(Properties().apply {
+    val producer = KafkaProducer<String, ByteArray>(Properties().apply {
         put("bootstrap.servers", "localhost:9092")
         put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
-        put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
+        put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
+        put("value.deserializer.specific.avro.reader", "true")
     })
 
     val drugs = buildList {
@@ -38,19 +41,24 @@ fun main() {
         }
     }
 
+    val p = fakePrescription(drugs, pharmas)
+    println(p)
+    println(p.toAvroBinary().contentToString())
+
     producer.use { kafka ->
         var sending = false
         while (true) {
             val prescription = fakePrescription(drugs, pharmas)
-            val record = ProducerRecord("prescriptions", "prescription-${Date()}", prescription.toJson())
+            val record = ProducerRecord("prescriptionsBin", "prescription-${Date()}", prescription.toAvroBinary())
             if (!sending) {
                 sending = true
                 kafka.send(record) { _, e ->
-                    if(e?.printStackTrace() != null) return@send
+                    if (e?.printStackTrace() != null) return@send
                     sending = false
                     println("Value sent: $prescription")
                 }
             }
+
             Thread.sleep(kotlin.random.Random.nextLong(500))
         }
     }
