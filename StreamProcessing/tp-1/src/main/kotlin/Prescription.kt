@@ -2,12 +2,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.javafaker.Faker
 import com.twitter.bijection.avro.GenericAvroCodecs
-import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
-import org.apache.avro.reflect.AvroSchema
 import org.apache.avro.specific.SpecificRecordBase
-import org.apache.commons.lang3.text.translate.EntityArrays.invert
 
 data class Prescription(
     var firstname: String,
@@ -15,7 +12,7 @@ data class Prescription(
     var cip: Int,
     var price: Double,
     var idPharma: Int,
-) : GenericRecord {
+) : SpecificRecordBase() {
 
     fun toJson(): String = mapper.writeValueAsString(this)
 
@@ -37,15 +34,6 @@ data class Prescription(
         return avroSchema
     }
 
-    override fun put(key: String?, v: Any?) = when (key) {
-        "firstname" -> firstname = v as String
-        "lastname" -> lastname = v as String
-        "cip" -> cip = v as Int
-        "price" -> price = v as Double
-        "idPharma" -> idPharma = v as Int
-        else -> throw IllegalArgumentException("Unknown key: $key")
-    }
-
     override fun put(i: Int, v: Any?) = when (i) {
         0 -> firstname = v as String
         1 -> lastname = v as String
@@ -53,15 +41,6 @@ data class Prescription(
         3 -> price = v as Double
         4 -> idPharma = v as Int
         else -> throw IllegalArgumentException("Unknown index $i")
-    }
-
-    override fun get(key: String?): Any = when (key) {
-        "firstname" -> firstname
-        "lastname" -> lastname
-        "cip" -> cip
-        "price" -> price
-        "idPharma" -> idPharma
-        else -> throw IllegalArgumentException("Unknown key: $key")
     }
 
     override fun get(i: Int): Any = when (i) {

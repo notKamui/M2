@@ -52,7 +52,7 @@ fun getDrugsAndPharma(): Pair<List<Drug>, List<Pharma>> {
 
 fun KafkaProducer<String, ByteArray>.producerLoop(
     drugs: List<Drug>,
-    pharmas: List<Pharma>
+    pharmas: List<Pharma>,
 ): Unit = use { kafka ->
     var sending = false
     while (true) {
