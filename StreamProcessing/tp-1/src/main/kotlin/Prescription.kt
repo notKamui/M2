@@ -6,7 +6,7 @@ import org.apache.avro.Schema
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.specific.SpecificRecordBase
 
-data class Prescription(
+/*data class Prescription(
     var firstname: String,
     var lastname: String,
     var cip: Int,
@@ -51,7 +51,13 @@ data class Prescription(
         4 -> idPharma
         else -> throw IllegalArgumentException("Unknown index $i")
     }
-}
+}*/
+
+private val avroSchema = Schema.Parser().parse(Prescription::class.java.getResourceAsStream("/avro/prescription.avsc"))
+private val avroConverter = GenericAvroCodecs.toBinary<Prescription>(avroSchema)
+
+fun fromAvroBinary(binary: ByteArray) = (avroConverter.invert(binary).get() as GenericRecord).toString()
+fun toAvroBinary(prescription: Prescription): ByteArray = avroConverter.apply(prescription)
 
 data class Pharma(
     val id: Int,

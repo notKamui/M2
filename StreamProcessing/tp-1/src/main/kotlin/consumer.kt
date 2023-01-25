@@ -15,7 +15,7 @@ fun main() {
         while (true) {
             val records = kafka.poll(Duration.ofSeconds(1))
             records.forEach { record ->
-                println(Prescription.fromAvroBinary(record.value()))
+                println(fromAvroBinary(record.value()))
             }
         }
     }

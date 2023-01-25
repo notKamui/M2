@@ -57,7 +57,11 @@ fun KafkaProducer<String, ByteArray>.producerLoop(
     var sending = false
     while (true) {
         val prescription = fakePrescription(drugs, pharmas)
-        val record = ProducerRecord("prescriptionsBin", "prescription-${Date()}", prescription.toAvroBinary())
+        val record = ProducerRecord(
+            "prescriptionsBin",
+            "prescription-${Date()}",
+            toAvroBinary(prescription),
+        )
         if (!sending) {
             sending = true
             kafka.send(record) { _, e ->
