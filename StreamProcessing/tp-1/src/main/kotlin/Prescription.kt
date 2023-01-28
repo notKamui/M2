@@ -1,63 +1,13 @@
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.javafaker.Faker
-import com.twitter.bijection.avro.GenericAvroCodecs
-import org.apache.avro.Schema
-import org.apache.avro.generic.GenericRecord
-import org.apache.avro.specific.SpecificRecordBase
+import com.twitter.bijection.Bijection
 
-/*data class Prescription(
-    var firstname: String,
-    var lastname: String,
-    var cip: Int,
-    var price: Double,
-    var idPharma: Int,
-) : SpecificRecordBase() {
+private val prescriptionBijection = Bijection.build<Prescription, ByteArray>(
+    { Prescription.getEncoder().encode(it).array() },
+    { Prescription.getDecoder().decode(it) }
+)
 
-    fun toJson(): String = mapper.writeValueAsString(this)
-
-    fun toAvroBinary(): ByteArray = avroConverter.apply(this)
-
-    companion object {
-
-        private val mapper = ObjectMapper().registerModule(KotlinModule())
-
-        private val avroSchema = Schema.Parser().parse(this::class.java.getResourceAsStream("/prescription.avsc"))
-        private val avroConverter = GenericAvroCodecs.toBinary<Prescription>(avroSchema)
-
-        fun fromJson(json: String): Prescription = mapper.readValue(json, Prescription::class.java)
-
-        fun fromAvroBinary(binary: ByteArray): Prescription = fromJson((avroConverter.invert(binary).get() as GenericRecord).toString())
-    }
-
-    override fun getSchema(): Schema {
-        return avroSchema
-    }
-
-    override fun put(i: Int, v: Any?) = when (i) {
-        0 -> firstname = v as String
-        1 -> lastname = v as String
-        2 -> cip = v as Int
-        3 -> price = v as Double
-        4 -> idPharma = v as Int
-        else -> throw IllegalArgumentException("Unknown index $i")
-    }
-
-    override fun get(i: Int): Any = when (i) {
-        0 -> firstname
-        1 -> lastname
-        2 -> cip
-        3 -> price
-        4 -> idPharma
-        else -> throw IllegalArgumentException("Unknown index $i")
-    }
-}*/
-
-private val avroSchema = Schema.Parser().parse(Prescription::class.java.getResourceAsStream("/avro/prescription.avsc"))
-private val avroConverter = GenericAvroCodecs.toBinary<Prescription>(avroSchema)
-
-fun fromAvroBinary(binary: ByteArray) = (avroConverter.invert(binary).get() as GenericRecord).toString()
-fun toAvroBinary(prescription: Prescription): ByteArray = avroConverter.apply(prescription)
+fun toAvroBinary(prescription: Prescription): ByteArray = prescriptionBijection.apply(prescription)
+fun fromAvroBinary(binary: ByteArray): Prescription = prescriptionBijection.invert(binary)
 
 data class Pharma(
     val id: Int,
