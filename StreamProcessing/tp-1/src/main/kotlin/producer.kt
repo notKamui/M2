@@ -1,18 +1,25 @@
 import java.sql.DriverManager
-import java.util.Date
 import java.util.Properties
 import kotlin.random.Random
 import org.apache.kafka.clients.producer.KafkaProducer
+import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.common.serialization.ByteArraySerializer
+import org.apache.kafka.common.serialization.VoidSerializer
+
+object Producer {
+
+    val producer = KafkaProducer<Void, ByteArray>(Properties().apply {
+        put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+        put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, VoidSerializer::class.java)
+        put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ByteArraySerializer::class.java)
+    })
+}
 
 fun main() {
     val (drugs, pharmas) = getDrugsAndPharma()
 
-    KafkaProducer<String, ByteArray>(Properties().apply {
-        put("bootstrap.servers", "localhost:9092")
-        put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
-        put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
-    }).producerLoop(drugs, pharmas)
+    Producer.producer.producerLoop(drugs, pharmas)
 }
 
 fun getDrugsAndPharma(): Pair<List<Drug>, List<Pharma>> {
@@ -49,15 +56,15 @@ fun getDrugsAndPharma(): Pair<List<Drug>, List<Pharma>> {
     return drugs to pharmas
 }
 
-fun KafkaProducer<String, ByteArray>.producerLoop(
+fun KafkaProducer<Void, ByteArray>.producerLoop(
     drugs: List<Drug>,
     pharmas: List<Pharma>,
 ): Unit = use { kafka ->
     var sending = false
     while (true) {
         val prescription = fakePrescription(drugs, pharmas)
-        val record = ProducerRecord<String, ByteArray>(
-            "prescriptions",
+        val record = ProducerRecord<Void, ByteArray>(
+            Topics.PRESCRIPTIONS,
             toAvroBinary(prescription),
         )
         if (!sending) {
