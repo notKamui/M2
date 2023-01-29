@@ -1,0 +1,2 @@
+[2023-01-29 19:05:47,416] INFO [Broker id=2] Stopped fetchers as part of become-follower request from controller 0 epoch 6 with correlation id 21 for 3 partitions (state.change.logger)
+[2023-01-29 19:05:47,430] INFO [Broker id=2] Finished LeaderAndIsr request in 1623719ms correlationId 21 from controller 0 for 3 partitions (state.change.logger)

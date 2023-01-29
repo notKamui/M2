@@ -1,0 +1,26 @@
+{
+  "type": "record",
+  "name": "Prescription",
+  "fields": [
+    {
+      "name": "firstname",
+      "type": "string"
+    },
+    {
+      "name": "lastname",
+      "type": "string"
+    },
+    {
+      "name": "cip",
+      "type": "int"
+    },
+    {
+      "name": "price",
+      "type": "double"
+    },
+    {
+      "name": "idPharma",
+      "type": "int"
+    }
+  ]
+}
