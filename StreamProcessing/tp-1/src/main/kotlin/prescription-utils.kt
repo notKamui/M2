@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.javafaker.Faker
 import com.twitter.bijection.Bijection
 
@@ -8,6 +10,9 @@ private val prescriptionBijection = Bijection.build<Prescription, ByteArray>(
 
 fun toAvroBinary(prescription: Prescription): ByteArray = prescriptionBijection.apply(prescription)
 fun fromAvroBinary(binary: ByteArray): Prescription = prescriptionBijection.invert(binary)
+
+fun toJson(prescription: Prescription): String = prescription.toString()
+fun fromJson(json: String): Prescription = ObjectMapper().readValue(json)
 
 data class Pharma(
     val id: Int,

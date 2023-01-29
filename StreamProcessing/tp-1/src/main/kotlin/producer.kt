@@ -12,7 +12,6 @@ fun main() {
         put("bootstrap.servers", "localhost:9092")
         put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
         put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer")
-        put("value.deserializer.specific.avro.reader", "true")
     }).producerLoop(drugs, pharmas)
 }
 
@@ -57,9 +56,8 @@ fun KafkaProducer<String, ByteArray>.producerLoop(
     var sending = false
     while (true) {
         val prescription = fakePrescription(drugs, pharmas)
-        val record = ProducerRecord(
-            "prescriptionsBin",
-            "prescription-${Date()}",
+        val record = ProducerRecord<String, ByteArray>(
+            "prescriptions",
             toAvroBinary(prescription),
         )
         if (!sending) {
